@@ -5,20 +5,11 @@ export const PRESETS = {
   turritella: { W: 1.35, D: 0.1, T: 4.5 },
   snail: { W: 2.0, D: 0.25, T: 1.5 },
   ramshorn: { W: 1.8, D: 0.65, T: 0.8 },
-  // Stylized: a real abalone is a low-spired, ear-shaped shell.
   abalone: { W: 8.0, D: 0.1, T: 0.4 },
 };
 
 const PARAMS = ['W', 'D', 'T'];
 
-/**
- * Wire up the control panel.
- *
- * @param {object} handlers
- * @param {(params: {W:number,D:number,T:number}) => void} handlers.onChange
- * @param {(enabled: boolean) => void} handlers.onWireframe
- * @param {(enabled: boolean) => void} handlers.onAutoRotate
- */
 export function createControls({ onChange, onWireframe, onAutoRotate }) {
   const inputs = {};
   const outputs = {};
@@ -38,8 +29,7 @@ export function createControls({ onChange, onWireframe, onAutoRotate }) {
 
   function renderOutputs() {
     for (const key of PARAMS) {
-      const decimals = key === 'W' ? 2 : 2;
-      outputs[key].value = Number(inputs[key].value).toFixed(decimals);
+      outputs[key].value = Number(inputs[key].value).toFixed(2);
     }
   }
 

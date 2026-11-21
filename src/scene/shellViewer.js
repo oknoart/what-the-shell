@@ -3,11 +3,6 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { generateShell } from '../math/raupGeometry.js';
 
-/**
- * Sets up the Three.js scene and exposes an API for updating the shell.
- *
- * @param {HTMLElement} container element that hosts the canvas
- */
 export function createShellViewer(container) {
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -39,7 +34,6 @@ export function createShellViewer(container) {
   controls.maxDistance = 12;
   controls.target.set(0, 0, 0);
 
-  // Environment map gives MeshPhysicalMaterial its reflections/sheen.
   const pmrem = new THREE.PMREMGenerator(renderer);
   const room = new RoomEnvironment();
   const envRT = pmrem.fromScene(room, 0.04);
@@ -47,8 +41,6 @@ export function createShellViewer(container) {
   pmrem.dispose();
   room.dispose?.();
 
-  // Hard key light raking across the whorls, minimal fill, cool rim for the
-  // silhouette. The key casts self-shadows so the crevices read clearly.
   const key = new THREE.DirectionalLight(0xfff0dd, 4.2);
   key.position.set(5, 7, 6);
   key.castShadow = true;
@@ -109,7 +101,6 @@ export function createShellViewer(container) {
     if (previous) previous.dispose();
   }
 
-  /** Coalesce rapid slider updates into one rebuild per animation frame. */
   function update(params) {
     pendingParams = params;
     if (scheduled) return;

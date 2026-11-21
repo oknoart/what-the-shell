@@ -19,7 +19,7 @@ Build a lightweight, no-UI-framework Vite + Three.js web application that simula
 ## 2. Project Architecture & File Structure
 
 ```
-raup-1966-shell-generator/
+what-the-shell/
 ├── index.html              # Main HTML container with control panel layout
 ├── style.css               # Modern dark-mode styling & glassmorphism UI
 ├── package.json            # Scripts: dev, build, preview, start
@@ -147,7 +147,7 @@ Because radius grows as $W^{\text{turns}}$, high-$W$ shells explode (e.g. $W = 8
    ```
 5. Publish to GitHub using `gh` CLI (the repo name intentionally differs from the local directory name `what-the-shell`):
    ```bash
-   gh repo create raup-1966-shell-generator --public --source=. --remote=origin --push
+   gh repo create what-the-shell --public --source=. --remote=origin --push
    ```
 
 ### Phase 6: Documentation (`README.md`)

@@ -1,29 +1,3 @@
-/**
- * Raup (1966) coiled-shell parametric surface.
- *
- * Pure module: no Three.js dependency. Returns flat typed arrays that the
- * scene layer wraps in a BufferGeometry.
- *
- * Parameters
- *   W  whorl expansion rate per revolution (1.1 .. 10)
- *   D  normalized distance of the generating curve from the axis (0 .. 0.85)
- *   T  vertical translation rate (0 .. 6), z_c = T * r_c
- *
- * Conventions
- *   k        = W^(1 / 2π)          growth factor per radian
- *   a(θ)     = a0 * k^θ            generating-curve radius
- *   r_c(θ)   = a(θ) * (1 + D)/(1 - D)
- *   z_c(θ)   = T * r_c(θ)
- *
- * Surface (θ = coiling angle, φ = angle around the generating curve):
- *   R = r_c + a cos φ
- *   Z = z_c + a sin φ
- *   X = R cos θ,  Y = R sin θ
- *
- * The result is centered and uniformly scaled to a unit bounding sphere so
- * that every preset is framed consistently by the viewer.
- */
-
 const TWO_PI = Math.PI * 2;
 
 export function generateShell({
@@ -40,8 +14,6 @@ export function generateShell({
   const lnK = Math.log(k);
   const c = (1 + D) / (1 - D);
 
-  // Adaptive turn cap: never let the radius grow past `growthCap` (relative to
-  // a0), otherwise high-W shells explode numerically. Always keep >= 1 turn.
   const thetaByCap = lnK > 1e-9 ? Math.log(growthCap) / lnK : turns * TWO_PI;
   const thetaMax = Math.max(TWO_PI, Math.min(turns * TWO_PI, thetaByCap));
 
@@ -77,19 +49,16 @@ export function generateShell({
       const X = R * cosT;
       const Y = R * sinT;
 
-      // ∂P/∂θ
       const dR_dTheta = rcPrime + aPrime * cosP;
       const dZ_dTheta = zcPrime + aPrime * sinP;
       const dX_dTheta = dR_dTheta * cosT - R * sinT;
       const dY_dTheta = dR_dTheta * sinT + R * cosT;
 
-      // ∂P/∂φ
       const dR_dPhi = -a * sinP;
       const dZ_dPhi = a * cosP;
       const dX_dPhi = dR_dPhi * cosT;
       const dY_dPhi = dR_dPhi * sinT;
 
-      // n = ∂P/∂θ × ∂P/∂φ (points outward)
       let nx = dY_dTheta * dZ_dPhi - dZ_dTheta * dY_dPhi;
       let ny = dZ_dTheta * dX_dPhi - dX_dTheta * dZ_dPhi;
       let nz = dX_dTheta * dY_dPhi - dY_dTheta * dX_dPhi;
@@ -109,7 +78,6 @@ export function generateShell({
     }
   }
 
-  // Indices: consistent CCW winding matching the outward normals above.
   const indices = new Uint32Array(thetaSegments * phiSegments * 6);
   let p = 0;
   for (let i = 0; i < thetaSegments; i++) {
@@ -140,13 +108,7 @@ export function generateShell({
   };
 }
 
-/**
- * Center the mesh on its bounding-box center and uniformly scale it so its
- * bounding-sphere radius is 1. Uniform scale leaves normals unchanged.
- */
 function normalizeToUnitSphere(positions) {
-  const count = positions.length / 3;
-
   let minX = Infinity;
   let minY = Infinity;
   let minZ = Infinity;
@@ -186,6 +148,4 @@ function normalizeToUnitSphere(positions) {
     positions[i + 1] = (positions[i + 1] - cy) * scale;
     positions[i + 2] = (positions[i + 2] - cz) * scale;
   }
-
-  return count;
 }

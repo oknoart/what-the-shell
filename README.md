@@ -7,7 +7,7 @@ horns.
 
 Built with plain **Vite + Three.js** (no UI framework).
 
-**Live demo:** <https://oknoart.github.io/raup-1966-shell-generator/>
+**Live demo:** <https://oknoart.github.io/what-the-shell/>
 
 ## Background
 
