@@ -13,8 +13,10 @@ export function createShellViewer(container) {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(container.clientWidth, container.clientHeight);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
+  renderer.toneMappingExposure = 1.0;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
   container.appendChild(renderer.domElement);
 
   const scene = new THREE.Scene();
@@ -45,29 +47,49 @@ export function createShellViewer(container) {
   pmrem.dispose();
   room.dispose?.();
 
-  // Studio lighting: warm key, cool fill, soft ambient.
-  const key = new THREE.DirectionalLight(0xfff1e0, 2.6);
-  key.position.set(4, 6, 5);
-  const fill = new THREE.DirectionalLight(0xbfd4ff, 1.1);
-  fill.position.set(-5, 2, -4);
-  const ambient = new THREE.AmbientLight(0xffffff, 0.3);
-  scene.add(key, fill, ambient);
+  // Hard key light raking across the whorls, minimal fill, cool rim for the
+  // silhouette. The key casts self-shadows so the crevices read clearly.
+  const key = new THREE.DirectionalLight(0xfff0dd, 4.2);
+  key.position.set(5, 7, 6);
+  key.castShadow = true;
+  key.shadow.mapSize.set(2048, 2048);
+  key.shadow.camera.near = 1;
+  key.shadow.camera.far = 30;
+  key.shadow.camera.left = -3;
+  key.shadow.camera.right = 3;
+  key.shadow.camera.top = 3;
+  key.shadow.camera.bottom = -3;
+  key.shadow.bias = -0.0004;
+  key.shadow.normalBias = 0.04;
+
+  const fill = new THREE.DirectionalLight(0x9db6d8, 0.35);
+  fill.position.set(-5, 1.5, -4);
+
+  const rim = new THREE.DirectionalLight(0xaecbff, 1.8);
+  rim.position.set(-4, 3, -6);
+
+  const ambient = new THREE.AmbientLight(0xffffff, 0.08);
+  scene.add(key, fill, rim, ambient);
 
   const material = new THREE.MeshPhysicalMaterial({
-    color: 0xf3e9d8,
-    roughness: 0.34,
+    color: 0xbfae92,
+    roughness: 0.5,
     metalness: 0.0,
-    clearcoat: 0.65,
-    clearcoatRoughness: 0.22,
-    iridescence: 0.7,
+    clearcoat: 0.45,
+    clearcoatRoughness: 0.3,
+    iridescence: 0.5,
     iridescenceIOR: 1.32,
-    iridescenceThicknessRange: [100, 520],
-    sheen: 0.45,
+    iridescenceThicknessMinimum: 100,
+    iridescenceThicknessMaximum: 520,
+    sheen: 0.3,
     sheenColor: new THREE.Color(0xffd9e8),
+    envMapIntensity: 0.4,
     side: THREE.DoubleSide,
   });
 
   const mesh = new THREE.Mesh(new THREE.BufferGeometry(), material);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
   scene.add(mesh);
 
   let pendingParams = null;
