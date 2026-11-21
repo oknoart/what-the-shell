@@ -7,6 +7,8 @@ horns.
 
 Built with plain **Vite + Three.js** (no UI framework).
 
+**Live demo:** <https://oknoart.github.io/raup-1966-shell-generator/>
+
 ## Background
 
 In *"Geometric analysis of shell coiling: general problems"* (Journal of
