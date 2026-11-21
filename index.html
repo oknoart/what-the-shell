@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Raup 1966 · Shell Morphospace</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <aside id="panel">
+        <header class="panel-header">
+          <h1>Raup <span>1966</span></h1>
+          <p>Coiled Shell Morphospace</p>
+        </header>
+
+        <section class="controls" aria-label="Shell parameters">
+          <div class="slider-row">
+            <label for="W">Whorl expansion <em>W</em></label>
+            <div class="slider-line">
+              <input id="W" type="range" min="1.1" max="10" step="0.01" value="2" />
+              <output id="W-value" for="W">2.00</output>
+            </div>
+          </div>
+
+          <div class="slider-row">
+            <label for="D">Distance from axis <em>D</em></label>
+            <div class="slider-line">
+              <input id="D" type="range" min="0" max="0.85" step="0.01" value="0.25" />
+              <output id="D-value" for="D">0.25</output>
+            </div>
+          </div>
+
+          <div class="slider-row">
+            <label for="T">Vertical translation <em>T</em></label>
+            <div class="slider-line">
+              <input id="T" type="range" min="0" max="6" step="0.01" value="1.5" />
+              <output id="T-value" for="T">1.50</output>
+            </div>
+          </div>
+        </section>
+
+        <section class="presets" aria-label="Presets">
+          <h2>Presets</h2>
+          <div class="preset-grid">
+            <button type="button" data-preset="ammonite">Ammonite</button>
+            <button type="button" data-preset="turritella">Turritella</button>
+            <button type="button" data-preset="snail">Classic Snail</button>
+            <button type="button" data-preset="ramshorn">Ram's Horn</button>
+            <button type="button" data-preset="abalone">Abalone</button>
+          </div>
+        </section>
+
+        <section class="toggles" aria-label="Display options">
+          <label class="switch">
+            <input id="wireframe" type="checkbox" />
+            <span class="track"><span class="thumb"></span></span>
+            <span class="switch-label">Wireframe</span>
+          </label>
+          <label class="switch">
+            <input id="autorotate" type="checkbox" checked />
+            <span class="track"><span class="thumb"></span></span>
+            <span class="switch-label">Auto-rotate</span>
+          </label>
+        </section>
+
+        <button type="button" id="reset" class="reset">Reset parameters</button>
+      </aside>
+
+      <main id="viewport" aria-label="3D shell viewer"></main>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
